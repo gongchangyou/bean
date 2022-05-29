@@ -3,6 +3,7 @@ package com.mouse.bean.config;
 import com.mouse.bean.annotation.Dubbo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -31,18 +32,26 @@ import java.util.List;
 public class AbstractAnnotationBeanPostProcessor implements BeanDefinitionRegistryPostProcessor, SmartInstantiationAwareBeanPostProcessor {
     @Override
     @Nullable
-    public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
+    public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName)
+            throws BeansException {
         final List<Object> elements = new LinkedList<>();
-        ReflectionUtils.doWithFields(beanClass, new ReflectionUtils.FieldCallback() {
+        ReflectionUtils.doWithFields(bean.getClass(), new ReflectionUtils.FieldCallback() {
             @Override
             public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
                 if (field.getAnnotation(Dubbo.class)!=null) {
                     elements.add(field);
                     //可以在这里做一些根据初始化field的 操作
+                    field.setAccessible(true);
+                    field.set(bean, 3L);
                 }
             }
         });
         log.info("beanName={} list={}",beanName,elements);
+        return null;
+    }
+    @Override
+    @Nullable
+    public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
         return null;
     }
 

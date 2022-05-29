@@ -23,6 +23,6 @@ public class TestController {
     @GetMapping(value = "/toPay")
     public String pay(
     ){
-        return "success!";
+        return "success!" + a;
     }
 }
