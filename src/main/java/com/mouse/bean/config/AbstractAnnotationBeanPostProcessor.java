@@ -28,8 +28,8 @@ import java.util.List;
  * @date 2022/5/29 17:18
  */
 @Slf4j
-@Component
 public class AbstractAnnotationBeanPostProcessor implements BeanDefinitionRegistryPostProcessor, SmartInstantiationAwareBeanPostProcessor {
+    public static final String BEAN_NAME = "abstractAnnotationBeanPostProcessor";
     @Override
     @Nullable
     public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName)
